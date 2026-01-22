@@ -149,6 +149,33 @@ void MakePhonemeList(Translator *tr, int post_pause, bool start_sentence)
 	memset(&worddata, 0, sizeof(worddata));
 	plist2 = ph_list2;
 	phlist = phoneme_list;
+
+	// FIX ERIK: Check if we have any phonemes before accessing array
+	if (n_ph_list2 <= 0) {
+		// No phonemes to process, just add terminating pauses
+		phlist[0].newword = PHLIST_END_OF_CLAUSE;
+		phlist[0].phcode = phonPAUSE;
+		phlist[0].type = phPAUSE;
+		phlist[0].length = post_pause;
+		phlist[0].sourceix = 0;
+		phlist[0].synthflags = 0;
+		phlist[0].prepause = 0;
+		phlist[0].ph = phoneme_tab[phonPAUSE];
+
+		phlist[1].newword = 0;
+		phlist[1].phcode = phonPAUSE;
+		phlist[1].type = phPAUSE;
+		phlist[1].length = 0;
+		phlist[1].sourceix = 0;
+		phlist[1].synthflags = 0;
+		phlist[1].prepause = 0;
+		phlist[1].ph = phoneme_tab[phonPAUSE_SHORT];
+
+		n_phoneme_list = 2;
+		SelectPhonemeTable(tr->phoneme_tab_ix);
+		return;
+	}
+	
 	end_sourceix = plist2[n_ph_list2-1].sourceix;
 	MAKE_MEM_UNDEFINED(&phoneme_list, sizeof(phoneme_list));
 
