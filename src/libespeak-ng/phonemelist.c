@@ -342,7 +342,10 @@ void MakePhonemeList(Translator *tr, int post_pause, bool start_sentence)
 			plist3->ph = ph;
 			plist3->phcode = alternative;
 
-			ReInterpretPhoneme(ph, ph2, plist3, ph_list3, tr, &phdata, &worddata);
+			// FIX ERIK: Add NULL check
+		    if (ph != NULL && ph2 != NULL) {
+		        ReInterpretPhoneme(ph, ph2, plist3, ph_list3, tr, &phdata, &worddata);
+		    }
 		}
 
 		if ((alternative = phdata.pd_param[pd_CHANGEPHONEME]) > 0) {
@@ -352,11 +355,14 @@ void MakePhonemeList(Translator *tr, int post_pause, bool start_sentence)
 			plist3->ph = ph;
 			plist3->phcode = alternative;
 
-			if (alternative == 1)
-				deleted = true; // NULL phoneme, discard
-			else {
-				ReInterpretPhoneme(ph, ph2, plist3, ph_list3, tr, &phdata, &worddata);
-			}
+		    if (alternative == 1)
+		        deleted = true; // NULL phoneme, discard
+		    else {
+		        // FIX ERIK: Add NULL check
+		        if (ph != NULL && ph2 != NULL) {
+		            ReInterpretPhoneme(ph, ph2, plist3, ph_list3, tr, &phdata, &worddata);
+		        }
+		    }
 		}
 
 		if ((ph->type == phVOWEL) && (deleted == false)) {
